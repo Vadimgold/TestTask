@@ -1,0 +1,69 @@
+﻿<Window x:Class="TestTaskApp.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:TestTaskApp.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance vm:MainViewModel, IsDesignTimeCreatable=True}"
+        Title="Фильмы" Height="450" Width="800">
+
+    <Window.DataContext>
+        <vm:MainViewModel />
+    </Window.DataContext>
+    <DockPanel LastChildFill="True">
+        <!-- Верхняя панель временная -->
+        <StackPanel Orientation="Horizontal"
+                    DockPanel.Dock="Top"
+                    Margin="10" Width="783">
+            <Button Content="Топ 100 фильмов"
+                    Command="{Binding ToggleFavoritesViewCommand}"
+                    Margin="5"
+                    Padding="10,5"
+                    Width="180"
+                    FontWeight="Bold"/>
+            <Button Content="Избранное"
+                    Command="{Binding ToggleFavoritesViewCommand}"
+                    Margin="5"
+                    Padding="10,5"
+                    Width="180"
+                    FontWeight="Bold"/>
+        </StackPanel>
+        <!--конец -->
+        <ScrollViewer>
+        <ItemsControl ItemsSource="{Binding Movies}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="Gray" BorderThickness="1" Margin="10" Padding="10">
+                        <StackPanel Orientation="Horizontal">                         
+                            <StackPanel Width="109">
+                                <Image Source="{Binding PosterUrl}" Width="100" Height="150" Margin="5"/>
+                                <TextBlock Text="{Binding Year}" FontSize="14" TextAlignment="Center"/>
+                                <Button Content="Подробнее" Command="{Binding DataContext.ShowDetailsCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" CommandParameter="{Binding}" Margin="5 10 0 0"/>
+                                    <Button Click="FavoriteButton_Click"
+                                        Margin="10"
+                                        Tag="{Binding}">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Content" Value="В избранное"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsFavorite}" Value="True">
+                                                        <Setter Property="Content" Value="Удалить из избранного"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+
+                                </StackPanel>
+                        <StackPanel Width="109">
+                                <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="18"/>
+                        </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </ScrollViewer>
+    </DockPanel>
+</Window>
