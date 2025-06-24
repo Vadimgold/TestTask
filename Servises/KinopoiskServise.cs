@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace TestTaskApp.Services
 {
@@ -16,24 +18,37 @@ namespace TestTaskApp.Services
         {
             _http = new HttpClient();
             _http.BaseAddress = new Uri("https://kinopoiskapiunofficial.tech/");
-            _http.DefaultRequestHeaders.Add("X-API-KEY", "ApiKeyTempHolder");
+            _http.DefaultRequestHeaders.Add("X-API-KEY", "URAPIKEY");
             _http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
         public async Task<List<ApiMovie>> GetPopularMoviesAsync()
         {
-            var response = await _http.GetAsync("api/v2.2/films/top?type=TOP_100_POPULAR_FILMS&page=1");
-            response.EnsureSuccessStatusCode();
+            var allMovies = new List<ApiMovie>();
+            int page = 1;
 
-            var json = await response.Content.ReadAsStringAsync();
-
-            var result = JsonSerializer.Deserialize<ApiResponse>(json, new JsonSerializerOptions
+            while (allMovies.Count < 100)
             {
-                PropertyNameCaseInsensitive = true
-            });
+                var response = await _http.GetAsync($"api/v2.2/films/collections?type=TOP_POPULAR_ALL&page={page}");
+                response.EnsureSuccessStatusCode();
 
-            return result?.Films ?? new List<ApiMovie>();
+                var json = await response.Content.ReadAsStringAsync();
+
+                var result = JsonSerializer.Deserialize<ApiCollectionResponse>(json, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                if (result?.Items == null || result.Items.Count == 0)
+                    break;
+
+                allMovies.AddRange(result.Items);
+                page++;
+            }
+
+            return allMovies.Take(100).ToList();
         }
+
         public async Task<ApiMovieDetails?> GetMovieDetailsAsync(int id)
         {
             var response = await _http.GetAsync($"api/v2.2/films/{id}");
@@ -44,28 +59,19 @@ namespace TestTaskApp.Services
             {
                 PropertyNameCaseInsensitive = true
             });
-        }
-        // temp for json
-        public async Task<string> GetMovieDetailsJsonAsync(int id)
-        {
-            var response = await _http.GetAsync($"api/v2.2/films/{id}");
-            response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadAsStringAsync();
+            
         }
-    }
 
-    public class ApiResponse
-    {
-        public List<ApiMovie> Films { get; set; }
     }
 
     public class ApiMovie
     {
-        public int FilmId { get; set; }
-        public string NameRU { get; set; }
-        public string Year { get; set; }
-        public string PosterUrl { get; set; }
+        public int kinopoiskId { get; set; }
+        public string? NameRU { get; set; }
+        public int? Year { get; set; }
+        public string? PosterUrl { get; set; }
+
     }
     public class ApiMovieDetails
     {
@@ -94,6 +100,11 @@ namespace TestTaskApp.Services
         }
 
     }
+    public class ApiCollectionResponse
+    {
+        public List<ApiMovie> Items { get; set; }
+    }
+
 
     public class Country
     {

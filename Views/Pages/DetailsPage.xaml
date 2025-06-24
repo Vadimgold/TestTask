@@ -1,0 +1,141 @@
+﻿<Page x:Class="TestTaskApp.Pages.DetailsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="DetailsPage">
+
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Orientation="Vertical" Margin="20" Width="Auto" HorizontalAlignment="Stretch">
+
+            <Button Content="← Вернуться назад"
+                    HorizontalAlignment="Left"
+                    Margin="0 0 0 20"
+                    Padding="10,5"
+                    Click="BackButton_Click"/>
+
+            <Image Source="{Binding PosterUrl}" Height="200" Stretch="Uniform" Margin="0 0 0 20"/>
+
+            <TextBlock Text="{Binding NameRu}" FontSize="24" FontWeight="Bold" Margin="0 0 0 10"/>
+            <TextBlock Text="{Binding Description}" FontSize="16" TextWrapping="Wrap" Margin="0 0 0 20" TextAlignment="Justify">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Description}" Value="">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Description}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+
+            <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
+                <StackPanel.Style>
+                    <Style TargetType="StackPanel">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding FilmLength}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+                <TextBlock>
+                    <Run Text="Длительность: " FontWeight="Bold"/>
+                    <Run Text="{Binding FilmLength}" />
+                    <Run Text=" мин"/>
+                </TextBlock>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
+                <StackPanel.Style>
+                    <Style TargetType="StackPanel">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding RatingKinopoisk}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+                <TextBlock>
+                    <Run Text="Рейтинг КП: " FontWeight="Bold"/>
+                    <Run Text="{Binding RatingKinopoisk}" />
+                </TextBlock>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
+                <StackPanel.Style>
+                    <Style TargetType="StackPanel">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding RatingGoodReview}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+                <TextBlock>
+                    <Run Text="Рейтинг обзоров: " FontWeight="Bold"/>
+                    <Run Text="{Binding RatingGoodReview}" />
+                </TextBlock>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
+                <StackPanel.Style>
+                    <Style TargetType="StackPanel">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding RatingRfCritics}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+                <TextBlock>
+                    <Run Text="Рейтинг критиков РФ: " FontWeight="Bold"/>
+                    <Run Text="{Binding RatingRfCritics}" />
+                </TextBlock>
+            </StackPanel>
+
+            <TextBlock Text="Жанры:" FontWeight="Bold" Margin="0 10 0 0"/>
+            <ItemsControl ItemsSource="{Binding Genres}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding genre}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <TextBlock Text="Страны:" FontWeight="Bold" Margin="0 10 0 0"/>
+            <ItemsControl ItemsSource="{Binding Countries}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding country}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <TextBlock Text="Возрастной рейтинг:" FontWeight="Bold" Margin="0 10 0 0"/>
+            <TextBlock Text="{Binding ConvertAge}" Margin="0 0 0 10">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ConvertAge}" Value="">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ConvertAge}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>
